@@ -14,7 +14,7 @@ class FeedforwardModel(nn.Module):
         self.weekday_embedding = nn.Embedding(n_weekday, n_weekday_features)
         self.month_embedding = nn.Embedding(n_monthday, n_monthday_features)
         n_inputs = (n_store_features + n_weekday_features + n_monthday_features
-                    + input_dim - 2)
+                    + input_dim - 3)
 
         self.predictor = nn.Sequential(
             nn.Linear(n_inputs, hidden_size),
