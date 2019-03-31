@@ -3,7 +3,7 @@ import calendar
 
 import numpy as np
 import pandas as pd
-
+import torch
 import torch.utils.data as dutils
 
 
@@ -69,8 +69,8 @@ class StoreData(dutils.Dataset):
         self.df = df
 
     def __getitem__(self, i):
-        x = torch.FloatTensor(df.iloc[i, 2:-2].values.astype('float'))
-        y = torch.FloatTensor([df.iloc[i, 0]])
+        x = torch.FloatTensor(self.df.iloc[i, 2:].values.astype('float'))
+        y = torch.FloatTensor([self.df.iloc[i, 0]])
         return x, y
 
     def __len__(self):
