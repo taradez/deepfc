@@ -1,7 +1,14 @@
+from collections import namedtuple
 import calendar
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+import torch.utils.data as dutils
+
+
+Datasets = namedtuple('Datasets', ['train', 'validation', 'test'])
+
 
 def prepare_data(df:pd.DataFrame, n_stores=None):
     df = df.rename(str.lower, axis='columns')
@@ -55,3 +62,24 @@ def reverse_onehot(df, onehot_cols, new_col):
 def create_lookup(values):
     lookup_dict = {idx: i for i, idx in enumerate(values)}
     return lookup_dict
+
+
+class StoreData(dutils.Dataset):
+    def __init__(self, df):
+        self.df = df
+
+    def __getitem__(self, i):
+        x = torch.FloatTensor(df.iloc[i, 2:-2].values.astype('float'))
+        y = torch.FloatTensor([df.iloc[i, 0]])
+        return x, y
+
+    def __len__(self):
+        return len(self.df)
+
+
+def split_dataframe(df, fractions=(.8, .1, .1)):
+    train = df.sample(frac=0.9, random_state=42)
+    validation = train.sample(frac=0.1, random_state=42)
+    test = df.drop(train.index)
+    train = train.drop(validation.index)
+    return Datasets(train, validation, test)
