@@ -47,7 +47,7 @@ def prepare_data(df:pd.DataFrame, n_stores=None):
 
 def select_first_stores(df, n_stores):
     store_list = df['organization_unit_num'].unique()
-    idx = df['organization_unit_num'].isin(store_list)
+    idx = df['organization_unit_num'].isin(store_list[:n_stores])
     df = df[idx]
     df.reset_index(drop=True, inplace=True)
     return df
